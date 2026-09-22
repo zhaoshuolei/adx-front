@@ -30,6 +30,8 @@ export async function request<T>(path: string, options: RequestInit = {}, token?
     throw new ApiError(error instanceof Error ? error.message : '网络请求失败')
   }
 
+  if (response.status === 204) return undefined as T
+
   const body = (await response.json().catch(() => null)) as ApiResponse<T> | null
   if (!response.ok) throw new ApiError(body?.msg || `请求失败 (${response.status})`, response.status)
   if (!body) throw new ApiError('服务返回了无法解析的数据', response.status)

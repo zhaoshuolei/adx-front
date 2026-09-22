@@ -29,26 +29,14 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'reconciliation',
         name: 'reconciliation',
-        component: () => import('@/views/ModulePlaceholderView.vue'),
-        meta: {
-          title: '三方对账',
-          module: '数据报表',
-          phase: 'P0',
-          purpose: '比较 ADX 与 DSP、ADX 与媒体数据，并钻取差异原因。',
-          endpoints: ['GET /api/business/report/special/reconciliation-gap'],
-        },
+        component: () => import('@/views/ReconciliationView.vue'),
+        meta: { title: '三方对账', module: '数据报表', phase: 'P0' },
       },
       {
         path: 'ad-spaces',
         name: 'ad-spaces',
-        component: () => import('@/views/ModulePlaceholderView.vue'),
-        meta: {
-          title: '广告位管理',
-          module: '广告运营',
-          phase: 'P0',
-          purpose: '管理广告位基本信息、尺寸、状态、策略绑定和投放表现。',
-          endpoints: ['GET /api/business/ad-spaces', 'POST /api/business/ad-spaces', 'PUT /api/business/ad-spaces/{id}', 'PATCH /api/business/ad-spaces/{id}/status'],
-        },
+        component: () => import('@/views/AdSpacesView.vue'),
+        meta: { title: '广告位管理', module: '广告运营', phase: 'P0' },
       },
       {
         path: 'media',
