@@ -44,6 +44,7 @@ export const navigationGroups: NavGroup[] = [
     label: '经营中心',
     items: [
       { title: '投放总览', route: '/overview', icon: LayoutDashboard },
+      { title: '收益分析', route: '/revenue', icon: BarChart3 },
       { title: '实时信号', route: '/runtime', icon: Activity, count: 5 },
     ],
   },
@@ -51,7 +52,10 @@ export const navigationGroups: NavGroup[] = [
     module: 'reports',
     label: '数据报表',
     items: [
+      { title: '核心趋势', route: '/reports/trends', icon: BarChart3 },
+      { title: '专项报表', route: '/reports/special', icon: Layers3 },
       { title: '三方对账', route: '/reconciliation', icon: Scale, count: 3 },
+      { title: '事件上报日志', route: '/event-logs', icon: Activity, count: 2 },
     ],
   },
   {
@@ -62,6 +66,7 @@ export const navigationGroups: NavGroup[] = [
       { title: '媒体与公司', route: '/media', icon: Building2 },
       { title: 'DSP 广告源', route: '/ad-sources', icon: Network },
       { title: '策略管理', route: '/strategies', icon: Layers3, count: 2 },
+      { title: '兜底广告', route: '/fallback-ads', icon: ShieldCheck },
       { title: 'DSP 配置', route: '/dsp', icon: BarChart3 },
     ],
   },
@@ -70,6 +75,8 @@ export const navigationGroups: NavGroup[] = [
     label: '财务结算',
     items: [
       { title: 'DSP 账单', route: '/billing/dsp', icon: ReceiptText },
+      { title: 'DSP 结算', route: '/settlements/dsp', icon: BarChart3 },
+      { title: '媒体结算', route: '/settlements/media', icon: Layers3 },
     ],
   },
   {
@@ -79,6 +86,8 @@ export const navigationGroups: NavGroup[] = [
       { title: '用户管理', route: '/system/users', icon: Users },
       { title: '角色权限', route: '/system/roles', icon: ShieldCheck },
       { title: '运行时配置', route: '/system/runtime-config', icon: SlidersHorizontal },
+      { title: '字典管理', route: '/system/dictionaries', icon: Layers3 },
+      { title: 'Client SDK', route: '/system/client-sdks', icon: Network },
     ],
   },
 ]
