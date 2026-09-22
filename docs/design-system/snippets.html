@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ADX · 可复用组件片段</title>
+  <script>
+    (() => {
+      const preference = localStorage.getItem('adx-theme-preference') || 'system';
+      const effective = preference === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : preference;
+      document.documentElement.dataset.theme = effective;
+      document.documentElement.dataset.themePreference = preference;
+    })();
+  </script>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="components.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <style>
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body { min-width: 1180px; overflow: hidden; color: var(--adx-text-strong); background: var(--adx-surface); }
+    .docs-shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); grid-template-rows: 64px minmax(0, 1fr); height: 100vh; }
+    .docs-head { display: flex; align-items: center; gap: 10px; padding: 0 18px; background: var(--adx-surface); }
+    .docs-head .adx-brand-mark { width: 36px; height: 36px; }
+    .docs-top { position: relative; display: flex; align-items: center; gap: 12px; padding: 0 22px; background: var(--adx-surface); }
+    .docs-top strong { font-size: 14px; }
+    .docs-actions { display: flex; gap: 7px; margin-left: auto; }
+    .docs-side { min-height: 0; padding: 14px; overflow-y: auto; background: var(--adx-surface); }
+    .docs-side a { display: flex; align-items: center; height: 38px; padding: 0 11px; border-radius: 11px; color: var(--adx-text-body); font-size: 11px; text-decoration: none; }
+    .docs-side a:hover { color: var(--adx-text-strong); background: var(--adx-surface-muted); }
+    .docs-side a.active { color: var(--adx-success); background: var(--adx-brand-soft); font-weight: 650; }
+    .docs-main { min-width: 0; min-height: 0; padding: 28px 32px 50px; border-top-left-radius: var(--adx-radius-shell); background: var(--adx-bg-app); overflow-y: auto; }
+    .docs-hero { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+    .docs-hero h1 { margin: 0; font-size: 28px; letter-spacing: -.5px; }
+    .docs-hero p { max-width: 700px; margin: 9px 0 0; color: var(--adx-text-muted); font-size: 11px; line-height: 1.7; }
+    .docs-section { margin-top: 28px; scroll-margin-top: 20px; }
+    .docs-section h2 { margin: 0; font-size: 16px; }
+    .docs-section > p { margin: 5px 0 12px; color: var(--adx-text-muted); font-size: 10px; }
+    .docs-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, .8fr); gap: 14px; }
+    .docs-preview { min-width: 0; padding: 18px; border-radius: var(--adx-radius-lg); background: var(--adx-surface); box-shadow: var(--adx-shadow-card); }
+    .docs-code { position: relative; min-width: 0; overflow: hidden; border-radius: var(--adx-radius-lg); background: #0d1b26; }
+    .docs-code-head { display: flex; align-items: center; justify-content: space-between; height: 42px; padding: 0 13px; color: #8298a7; background: #0a151d; font-family: "Cascadia Code", Consolas, monospace; font-size: 8px; }
+    .docs-code button { height: 26px; padding: 0 9px; border: 1px solid #243947; border-radius: 7px; color: #a9bbc6; background: #122431; font-size: 8px; }
+    .docs-code pre { max-height: 420px; margin: 0; padding: 16px; overflow: auto; color: #c9d8df; font-family: "Cascadia Code", Consolas, monospace; font-size: 8px; line-height: 1.7; white-space: pre; }
+    .docs-note { padding: 12px 13px; border-radius: 12px; color: var(--adx-text-muted); background: var(--adx-surface-muted); font-size: 9px; line-height: 1.6; }
+    .docs-live-frame { height: 520px; overflow: hidden; border-radius: 18px; background: var(--adx-bg-app); }
+    .docs-live-frame .adx-app-shell { height: 520px; }
+    .docs-component-line { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+    .docs-field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .docs-kpi-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 1260px) { .docs-shell { grid-template-columns: 200px minmax(0, 1fr); } .docs-main { padding-right: 22px; padding-left: 22px; } }
+  </style>
+</head>
+<body>
+  <div class="docs-shell">
+    <div class="docs-head">
+      <span class="adx-brand-mark"><i data-lucide="blocks" class="icon adx-icon"></i></span>
+      <span class="adx-brand-copy"><strong>ADX DS</strong><span>Shared assets</span></span>
+    </div>
+    <header class="docs-top">
+      <strong>可复用组件片段</strong>
+      <div class="docs-actions">
+        <button class="adx-button adx-button--secondary" type="button" data-theme-set="light">浅色</button>
+        <button class="adx-button adx-button--secondary" type="button" data-theme-set="system">系统</button>
+        <button class="adx-button adx-button--secondary" type="button" data-theme-set="dark">深色</button>
+      </div>
+    </header>
+    <aside class="docs-side">
+      <a class="active" href="#shell"><i data-lucide="layout-panel-left" class="adx-icon"></i>应用骨架</a>
+      <a href="#navigation"><i data-lucide="menu" class="adx-icon"></i>导航菜单</a>
+      <a href="#actions"><i data-lucide="mouse-pointer-click" class="adx-icon"></i>按钮操作</a>
+      <a href="#forms"><i data-lucide="text-cursor-input" class="adx-icon"></i>筛选表单</a>
+      <a href="#data"><i data-lucide="table-properties" class="adx-icon"></i>数据展示</a>
+      <a href="#feedback"><i data-lucide="message-square-warning" class="adx-icon"></i>状态反馈</a>
+    </aside>
+    <main class="docs-main">
+      <header class="docs-hero">
+        <div><h1>可复用 HTML 片段</h1><p>所有示例直接使用 <code>tokens.css</code> 和 <code>components.css</code>。业务页面只组合类名，不覆盖共享颜色、圆角、尺寸和状态。</p></div>
+        <span class="adx-status adx-status--success">v1.0</span>
+      </header>
+
+      <section class="docs-section" id="shell">
+        <h2>应用骨架</h2><p>全屏框架、左侧导航、顶部模块切换和圆角工作区。</p>
+        <div class="docs-grid">
+          <div class="docs-preview">
+            <div class="docs-live-frame">
+              <div class="adx-app-shell is-sidebar-collapsed">
+                <div class="adx-side-header"><span class="adx-brand-mark"><i data-lucide="box" class="adx-icon"></i></span></div>
+                <header class="adx-topbar"><button class="adx-collapse-button"><i data-lucide="panel-left" class="adx-icon"></i></button><div class="adx-breadcrumb"><span>经营中心</span><i data-lucide="chevron-right" class="adx-icon"></i><strong>投放总览</strong></div></header>
+                <aside class="adx-sidebar"><button class="adx-nav-item active"><i data-lucide="layout-dashboard" class="adx-icon"></i><span>经营概览</span></button><button class="adx-nav-item"><i data-lucide="settings-2" class="adx-icon"></i><span>平台配置</span></button></aside>
+                <main class="adx-workspace"><div class="adx-page-header"><div><p class="adx-page-kicker">经营中心</p><h2 class="adx-page-title">投放总览</h2></div><button class="adx-button adx-button--primary">导出报表</button></div><div class="docs-kpi-grid"><article class="adx-kpi"><div class="adx-kpi__top">预估收益</div><div class="adx-kpi__value">¥ 486,320</div><div class="adx-kpi__foot">+6.8% 较昨日</div></article><article class="adx-kpi"><div class="adx-kpi__top">原始请求</div><div class="adx-kpi__value">28.64M</div><div class="adx-kpi__foot">+4.2% 较昨日</div></article><article class="adx-kpi"><div class="adx-kpi__top">填充率</div><div class="adx-kpi__value">83.7%</div><div class="adx-kpi__foot">目标 85%</div></article></div></main>
+              </div>
+            </div>
+          </div>
+          <article class="docs-code"><div class="docs-code-head"><span>app-shell.html</span><button data-copy="shell">复制</button></div><pre><code data-code="shell"></code></pre></article>
+        </div>
+      </section>
+
+      <section class="docs-section" id="navigation">
+        <h2>导航菜单</h2><p>一级项、二级项、选中态和数量提示。</p>
+        <div class="docs-grid">
+          <div class="docs-preview">
+            <button class="adx-nav-item active"><i data-lucide="layout-dashboard" class="adx-icon"></i><span>经营概览</span></button>
+            <button class="adx-nav-item" style="padding-left:38px"><span>广告位管理</span></button>
+            <button class="adx-nav-item" style="padding-left:38px"><span>媒体与公司</span><small>3</small></button>
+            <button class="adx-nav-item"><i data-lucide="settings-2" class="adx-icon"></i><span>平台配置</span></button>
+          </div>
+          <article class="docs-code"><div class="docs-code-head"><span>navigation.html</span><button data-copy="navigation">复制</button></div><pre><code data-code="navigation"></code></pre></article>
+        </div>
+      </section>
+
+      <section class="docs-section" id="actions">
+        <h2>按钮操作</h2><p>主操作、次操作、幽灵操作、危险操作和图标操作。</p>
+        <div class="docs-grid">
+          <div class="docs-preview"><div class="docs-component-line"><button class="adx-button adx-button--primary"><i data-lucide="plus" class="adx-icon"></i>新增用户</button><button class="adx-button adx-button--secondary"><i data-lucide="refresh-cw" class="adx-icon"></i>刷新</button><button class="adx-button adx-button--ghost">查看详情</button><button class="adx-button adx-button--danger"><i data-lucide="trash-2" class="adx-icon"></i>删除</button><button class="adx-icon-button"><i data-lucide="ellipsis" class="adx-icon"></i></button></div></div>
+          <article class="docs-code"><div class="docs-code-head"><span>buttons.html</span><button data-copy="buttons">复制</button></div><pre><code data-code="buttons"></code></pre></article>
+        </div>
+      </section>
+
+      <section class="docs-section" id="forms">
+        <h2>筛选表单</h2><p>输入、选择、日期与操作按钮的标准组合。</p>
+        <div class="docs-grid">
+          <div class="docs-preview"><div class="docs-field-grid"><label class="adx-field"><span class="adx-field__label">关键词</span><span class="adx-input-shell"><i data-lucide="search" class="adx-icon"></i><input placeholder="广告位名称或编码"></span></label><label class="adx-field"><span class="adx-field__label">状态</span><span class="adx-input-shell"><select><option>全部状态</option><option>启用</option><option>停用</option></select></span></label></div><div class="docs-component-line" style="margin-top:14px"><button class="adx-button adx-button--primary">查询</button><button class="adx-button adx-button--secondary">重置</button></div></div>
+          <article class="docs-code"><div class="docs-code-head"><span>filters.html</span><button data-copy="filters">复制</button></div><pre><code data-code="filters"></code></pre></article>
+        </div>
+      </section>
+
+      <section class="docs-section" id="data">
+        <h2>数据展示</h2><p>KPI、面板、表格、状态标签和空状态。</p>
+        <div class="docs-grid">
+          <div class="docs-preview"><div class="docs-kpi-grid"><article class="adx-kpi"><div class="adx-kpi__top">预估收益</div><div class="adx-kpi__value">¥ 486,320</div><div class="adx-kpi__foot">+6.8% 较昨日</div></article><article class="adx-kpi"><div class="adx-kpi__top">原始请求</div><div class="adx-kpi__value">28.64M</div><div class="adx-kpi__foot">+4.2% 较昨日</div></article><article class="adx-kpi"><div class="adx-kpi__top">填充率</div><div class="adx-kpi__value">83.7%</div><div class="adx-kpi__foot">目标 85%</div></article></div><div class="adx-panel" style="margin-top:12px"><div class="adx-panel__head"><div><h3 class="adx-panel__title">广告位表现</h3><p class="adx-panel__meta">今日收益排序</p></div><span class="adx-status adx-status--success">数据正常</span></div><div class="adx-table-wrap"><table class="adx-table"><thead><tr><th>广告位</th><th>请求</th><th>填充率</th><th>状态</th></tr></thead><tbody><tr><td>乐商店-首页横幅</td><td>4.82M</td><td>86.4%</td><td><span class="adx-status adx-status--warning">观察</span></td></tr><tr><td>天气通-详情信息流</td><td>3.96M</td><td>88.1%</td><td><span class="adx-status adx-status--success">投放中</span></td></tr></tbody></table></div></div></div>
+          <article class="docs-code"><div class="docs-code-head"><span>data-display.html</span><button data-copy="data">复制</button></div><pre><code data-code="data"></code></pre></article>
+        </div>
+      </section>
+
+      <section class="docs-section" id="feedback">
+        <h2>状态反馈</h2><p>轻提示、状态标签、空状态和加载骨架。</p>
+        <div class="docs-grid">
+          <div class="docs-preview"><span class="adx-toast"><i data-lucide="check-circle-2" class="adx-icon"></i>配置已保存</span><div class="docs-component-line" style="margin-top:14px"><span class="adx-status adx-status--success">正常</span><span class="adx-status adx-status--warning">观察</span><span class="adx-status adx-status--danger">异常</span><span class="adx-status adx-status--info">草稿</span></div><div class="adx-empty" style="margin-top:14px"><div><i data-lucide="inbox" class="adx-icon"></i><strong style="display:block;margin-top:9px;font-size:11px">暂无匹配结果</strong><p style="margin:5px 0 0;color:var(--adx-text-muted);font-size:9px">调整筛选条件后重试。</p></div></div></div>
+          <article class="docs-code"><div class="docs-code-head"><span>feedback.html</span><button data-copy="feedback">复制</button></div><pre><code data-code="feedback"></code></pre></article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="tpl-shell">
+<div class="adx-app-shell" id="appShell">
+  <div class="adx-side-header">
+    <span class="adx-brand-mark"><i data-lucide="box" class="adx-icon"></i></span>
+    <span class="adx-brand-copy"><strong>ADX 管理中心</strong><span>Advertising OS</span></span>
+  </div>
+  <header class="adx-topbar">
+    <button class="adx-collapse-button" id="sidebarToggle" aria-label="收起主导航"><i data-lucide="panel-left" class="adx-icon"></i></button>
+    <div class="adx-breadcrumb"><span>经营中心</span><i data-lucide="chevron-right" class="adx-icon"></i><strong>投放总览</strong></div>
+    <nav class="adx-module-tabs">...</nav>
+  </header>
+  <aside class="adx-sidebar" id="mainSidebar">...</aside>
+  <main class="adx-workspace">...</main>
+</div>
+  </template>
+
+  <template id="tpl-navigation">
+<button class="adx-nav-item active">
+  <i data-lucide="layout-dashboard" class="adx-icon"></i>
+  <span>经营概览</span>
+</button>
+<button class="adx-nav-item" style="padding-left:38px"><span>广告位管理</span></button>
+<button class="adx-nav-item" style="padding-left:38px">
+  <span>媒体与公司</span><small>3</small>
+</button>
+  </template>
+
+  <template id="tpl-buttons">
+<button class="adx-button adx-button--primary">
+  <i data-lucide="plus" class="adx-icon"></i>新增用户
+</button>
+<button class="adx-button adx-button--secondary">
+  <i data-lucide="refresh-cw" class="adx-icon"></i>刷新
+</button>
+<button class="adx-button adx-button--ghost">查看详情</button>
+<button class="adx-button adx-button--danger">
+  <i data-lucide="trash-2" class="adx-icon"></i>删除
+</button>
+  </template>
+
+  <template id="tpl-filters">
+<label class="adx-field">
+  <span class="adx-field__label">关键词</span>
+  <span class="adx-input-shell">
+    <i data-lucide="search" class="adx-icon"></i>
+    <input placeholder="广告位名称或编码">
+  </span>
+</label>
+<label class="adx-field">
+  <span class="adx-field__label">状态</span>
+  <span class="adx-input-shell">
+    <select><option>全部状态</option><option>启用</option><option>停用</option></select>
+  </span>
+</label>
+  </template>
+
+  <template id="tpl-data">
+<div class="adx-panel">
+  <div class="adx-panel__head">
+    <div><h3 class="adx-panel__title">广告位表现</h3><p class="adx-panel__meta">今日收益排序</p></div>
+    <span class="adx-status adx-status--success">数据正常</span>
+  </div>
+  <div class="adx-table-wrap">
+    <table class="adx-table">
+      <thead><tr><th>广告位</th><th>请求</th><th>填充率</th><th>状态</th></tr></thead>
+      <tbody>
+        <tr><td>乐商店-首页横幅</td><td>4.82M</td><td>86.4%</td><td><span class="adx-status adx-status--warning">观察</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+  </template>
+
+  <template id="tpl-feedback">
+<span class="adx-toast"><i data-lucide="check-circle-2" class="adx-icon"></i>配置已保存</span>
+<span class="adx-status adx-status--success">正常</span>
+<span class="adx-status adx-status--warning">观察</span>
+<span class="adx-status adx-status--danger">异常</span>
+<div class="adx-empty">
+  <div><strong>暂无匹配结果</strong><p>调整筛选条件后重试。</p></div>
+</div>
+  </template>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const root = document.documentElement;
+      const system = matchMedia('(prefers-color-scheme: dark)');
+      const previews = ['shell', 'navigation', 'buttons', 'filters', 'data', 'feedback'];
+      previews.forEach((name) => {
+        const template = document.getElementById(`tpl-${name}`);
+        const target = document.querySelector(`[data-code="${name}"]`);
+        target.textContent = template.innerHTML.trim();
+      });
+      if (window.lucide) lucide.createIcons();
+      document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
+        const name = button.dataset.copy;
+        const text = document.querySelector(`[data-code="${name}"]`).textContent;
+        try { await navigator.clipboard.writeText(text); button.textContent = '已复制'; setTimeout(() => { button.textContent = '复制'; }, 1400); } catch (error) { button.textContent = '复制失败'; }
+      }));
+      const applyTheme = (preference) => {
+        const effective = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
+        root.dataset.theme = effective;
+        root.dataset.themePreference = preference;
+        localStorage.setItem('adx-theme-preference', preference);
+      };
+      system.addEventListener('change', () => { if ((root.dataset.themePreference || 'system') === 'system') applyTheme('system'); });
+      document.querySelectorAll('[data-theme-set]').forEach((button) => button.addEventListener('click', () => applyTheme(button.dataset.themeSet)));
+      document.querySelectorAll('.docs-side a').forEach((link) => link.addEventListener('click', () => {
+        document.querySelectorAll('.docs-side a').forEach((item) => item.classList.remove('active'));
+        link.classList.add('active');
+      }));
+    });
+  </script>
+</body>
+</html>

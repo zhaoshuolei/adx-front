@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ADX · 通用组件规范</title>
+  <script>
+    (() => {
+      try {
+        const preference = localStorage.getItem('adx-theme-preference') || 'system';
+        const valid = ['light', 'dark', 'system'].includes(preference) ? preference : 'system';
+        document.documentElement.dataset.themePreference = valid;
+        document.documentElement.dataset.theme = valid === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : valid;
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="component-spec.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+  <div class="spec-shell" id="specShell">
+    <div class="side-header">
+      <span class="brand-mark"><i data-lucide="blocks" class="icon"></i></span>
+      <span class="brand-copy"><strong>ADX Design</strong><span>Component Standard</span></span>
+    </div>
+
+    <header class="topbar">
+      <button class="collapse-button" id="specSidebarToggle" type="button" aria-label="收起组件导航" aria-controls="specSidebar" aria-expanded="true"><i data-lucide="panel-left" class="icon"></i></button>
+      <div class="breadcrumb"><span>ADX 管理中心</span><i data-lucide="chevron-right" class="icon"></i><strong>通用组件规范</strong></div>
+      <nav class="module-tabs" aria-label="规范分类">
+        <button class="module-tab active" data-jump="principles">基础</button>
+        <button class="module-tab" data-jump="components">组件</button>
+        <button class="module-tab" data-jump="feedback">状态</button>
+      </nav>
+      <div class="top-actions">
+        <div class="segmented" aria-label="主题预览">
+          <button class="segment" type="button" data-theme-option="light">浅色</button>
+          <button class="segment active" type="button" data-theme-option="system">系统</button>
+          <button class="segment" type="button" data-theme-option="dark">深色</button>
+        </div>
+      </div>
+    </header>
+
+    <aside class="sidebar" id="specSidebar">
+      <nav>
+        <div class="nav-label">设计基础</div>
+        <button class="nav-item active" data-target="principles"><i data-lucide="compass" class="icon"></i><span>设计原则</span></button>
+        <button class="nav-item" data-target="tokens"><i data-lucide="swatch-book" class="icon"></i><span>设计令牌</span></button>
+        <button class="nav-item" data-target="shell"><i data-lucide="layout-panel-left" class="icon"></i><span>骨架布局</span></button>
+        <div class="nav-label" style="margin-top:16px">组件清单</div>
+        <button class="nav-item" data-target="navigation"><i data-lucide="menu" class="icon"></i><span>导航组件</span></button>
+        <button class="nav-item" data-target="actions"><i data-lucide="mouse-pointer-click" class="icon"></i><span>操作组件</span></button>
+        <button class="nav-item" data-target="forms"><i data-lucide="text-cursor-input" class="icon"></i><span>表单组件</span></button>
+        <button class="nav-item" data-target="data"><i data-lucide="table-properties" class="icon"></i><span>数据展示</span></button>
+        <button class="nav-item" data-target="feedback"><i data-lucide="message-square-warning" class="icon"></i><span>反馈状态</span></button>
+        <button class="nav-item" data-target="rules"><i data-lucide="shield-check" class="icon"></i><span>使用规则</span></button>
+      </nav>
+      <div class="spec-side-foot">版本 1.0 · 基于已确认的第 4 版骨架<br>更新日期 2026-09-22</div>
+    </aside>
+
+    <main class="spec-workspace" id="specWorkspace">
+      <header class="page-header">
+        <div>
+          <p class="page-kicker">ADX Design System · Foundation</p>
+          <h1>通用组件规范</h1>
+          <p>用于统一后台页面的骨架、视觉令牌、交互状态和组件行为。所有业务页面都应复用本规范，不单独发明颜色、圆角和间距。</p>
+        </div>
+        <span class="version-chip"><i></i>已确认为视觉基线</span>
+      </header>
+
+      <section class="spec-section" id="principles">
+        <div class="section-head"><div><h2>设计原则</h2><p>决定组件何时一致、何时可以存在差异</p></div><span class="section-index">01</span></div>
+        <div class="spec-panel">
+          <div class="spec-grid cols-4">
+            <article class="principle"><span class="principle-icon"><i data-lucide="blend" class="icon"></i></span><strong>结构一体化</strong><p>顶栏、侧栏和工作区属于同一框架，不通过重边框表达区域关系。</p></article>
+            <article class="principle"><span class="principle-icon"><i data-lucide="scan-line" class="icon"></i></span><strong>信息高密度</strong><p>优先使用表格、指标和分组，而不是大面积装饰性容器。</p></article>
+            <article class="principle"><span class="principle-icon"><i data-lucide="fingerprint" class="icon"></i></span><strong>状态可识别</strong><p>正常、警告、异常和禁用状态必须同时有颜色、文字和语义。</p></article>
+            <article class="principle"><span class="principle-icon"><i data-lucide="accessibility" class="icon"></i></span><strong>操作可预期</strong><p>相同控件在全局使用相同尺寸、反馈、焦点和禁用规则。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="tokens">
+        <div class="section-head"><div><h2>设计令牌</h2><p>颜色、排版、间距、圆角与阴影的唯一来源</p></div><span class="section-index">02</span></div>
+        <div class="spec-panel">
+          <div class="token-group">
+            <div class="token-title"><span>核心颜色</span><code>tokens.color.*</code></div>
+            <div class="color-grid">
+              <div class="color-token"><div class="color-swatch" style="background:#12b886"></div><div class="color-meta"><strong>品牌主色</strong><code>--brand-500</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#0ca678"></div><div class="color-meta"><strong>品牌按压</strong><code>--brand-600</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#e5f7ef"></div><div class="color-meta"><strong>品牌浅底</strong><code>--brand-soft</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#f4f6f9"></div><div class="color-meta"><strong>页面背景</strong><code>--bg-app</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#172b3d"></div><div class="color-meta"><strong>主要文字</strong><code>--text-strong</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#87959f"></div><div class="color-meta"><strong>次要文字</strong><code>--text-muted</code></div></div>
+            </div>
+          </div>
+          <div class="token-group">
+            <div class="token-title"><span>语义颜色</span><code>tokens.color.semantic.*</code></div>
+            <div class="color-grid">
+              <div class="color-token"><div class="color-swatch" style="background:#0f9f72"></div><div class="color-meta"><strong>成功</strong><code>--success</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#a86408"></div><div class="color-meta"><strong>警告</strong><code>--warning</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#b64e43"></div><div class="color-meta"><strong>异常</strong><code>--danger</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#3f73f6"></div><div class="color-meta"><strong>信息</strong><code>--info</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#ffffff;box-shadow:inset 0 0 0 1px #eef1f3"></div><div class="color-meta"><strong>卡片</strong><code>--surface</code></div></div>
+              <div class="color-token"><div class="color-swatch" style="background:#f0f3f5"></div><div class="color-meta"><strong>分隔</strong><code>--divider</code></div></div>
+            </div>
+          </div>
+          <div class="divider-soft"></div>
+          <div class="token-group">
+            <div class="token-title"><span>文字层级</span><code>tokens.typography</code></div>
+            <div class="type-row"><span class="type-name">页面标题</span><span class="type-sample display">投放总览</span><span class="type-spec">28 / 760 / -0.5</span></div>
+            <div class="type-row"><span class="type-name">模块标题</span><span class="type-sample heading">收益与填充趋势</span><span class="type-spec">16 / 720 / 0</span></div>
+            <div class="type-row"><span class="type-name">分区标题</span><span class="type-sample section">广告位表现</span><span class="type-spec">13 / 650 / 0</span></div>
+            <div class="type-row"><span class="type-name">正文</span><span class="type-sample body">经营数据每 60 秒刷新，统计日期为 2026-09-22。</span><span class="type-spec">12 / 400 / 1.6</span></div>
+            <div class="type-row"><span class="type-name">辅助文字</span><span class="type-sample caption">最近更新 4 分钟前</span><span class="type-spec">10 / 400 / 1.5</span></div>
+            <div class="type-row"><span class="type-name">微型标签</span><span class="type-sample micro">TASK / ACTIVE</span><span class="type-spec">9 / 500 / 0.2</span></div>
+          </div>
+          <div class="divider-soft"></div>
+          <div class="spec-grid cols-2">
+            <div class="token-group">
+              <div class="token-title"><span>间距阶梯</span><code>4 · 8 · 12 · 16 · 20 · 24 · 28 · 32</code></div>
+              <div class="spacing-scale">
+                <span class="space-item"><i class="space-bar" style="height:4px"></i>4</span>
+                <span class="space-item"><i class="space-bar" style="height:8px"></i>8</span>
+                <span class="space-item"><i class="space-bar" style="height:12px"></i>12</span>
+                <span class="space-item"><i class="space-bar" style="height:16px"></i>16</span>
+                <span class="space-item"><i class="space-bar" style="height:20px"></i>20</span>
+                <span class="space-item"><i class="space-bar" style="height:24px"></i>24</span>
+                <span class="space-item"><i class="space-bar" style="height:28px"></i>28</span>
+                <span class="space-item"><i class="space-bar" style="height:32px"></i>32</span>
+              </div>
+            </div>
+            <div class="token-group">
+              <div class="token-title"><span>圆角阶梯</span><code>8 · 10 · 12 · 16 · 20 · 28 · pill</code></div>
+              <div class="radius-row">
+                <span class="radius-item"><i class="radius-box" style="border-radius:8px"></i>8 输入</span>
+                <span class="radius-item"><i class="radius-box" style="border-radius:10px"></i>10 标签</span>
+                <span class="radius-item"><i class="radius-box" style="border-radius:12px"></i>12 按钮</span>
+                <span class="radius-item"><i class="radius-box" style="border-radius:16px"></i>16 卡片</span>
+                <span class="radius-item"><i class="radius-box" style="border-radius:20px"></i>20 菜单</span>
+                <span class="radius-item"><i class="radius-box" style="border-radius:28px 0 0 0"></i>28 工作区</span>
+              </div>
+            </div>
+          </div>
+          <div class="token-group">
+            <div class="token-title"><span>阴影与焦点</span><code>tokens.elevation</code></div>
+            <div class="shadow-row">
+              <div class="shadow-item card">卡片阴影</div>
+              <div class="shadow-item menu">浮动菜单</div>
+              <div class="shadow-item focus">焦点光环</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="shell">
+        <div class="section-head"><div><h2>骨架布局</h2><p>全屏、无四边留白、连续框架和大圆角工作区</p></div><span class="section-index">03</span></div>
+        <div class="spec-panel">
+          <div class="spec-grid cols-2">
+            <div>
+              <p class="preview-label">结构示意</p>
+              <div class="shell-diagram">
+                <div class="diagram-brand">LOGO</div><div class="diagram-top">顶部栏 72px</div>
+                <div class="diagram-side">侧栏 232px<br><small>收起 72px</small></div><div class="diagram-content">工作区圆角 28px</div>
+              </div>
+            </div>
+            <div class="layout-rules">
+              <div><span>侧栏展开</span><strong>232px</strong></div>
+              <div><span>侧栏收起</span><strong>72px</strong></div>
+              <div><span>顶栏高度</span><strong>72px</strong></div>
+              <div><span>工作区上左圆角</span><strong>28px</strong></div>
+              <div><span>内容边距</span><strong>24–30px</strong></div>
+              <div><span>卡片间距</span><strong>12px</strong></div>
+            </div>
+          </div>
+          <div class="do-dont" style="margin-top:14px">
+            <article class="rule-card do"><h3><i data-lucide="check" class="icon"></i>应该</h3><ul><li>页面从视口四边铺满，不增加外层留白。</li><li>顶栏、侧栏使用同色底板，形成连续框架。</li><li>工作区用背景差和圆角表达层级，不使用边框。</li></ul></article>
+            <article class="rule-card dont"><h3><i data-lucide="x" class="icon"></i>不要</h3><ul><li>不要为顶栏、侧栏和工作区分别加边框。</li><li>不要在页面外再套一个带阴影的“大卡片”。</li><li>不要在小屏隐藏核心导航或压缩点击区域。</li></ul></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="navigation">
+        <div class="section-head"><div><h2>导航组件</h2><p>一级模块、二级菜单与折叠状态</p></div><span class="section-index">04</span></div>
+        <div class="spec-grid cols-2">
+          <div class="spec-panel">
+            <p class="preview-label">一级模块胶囊</p>
+            <div class="preview-box">
+              <div class="module-tabs" style="position:static;transform:none;width:max-content">
+                <button class="module-tab active">经营中心</button><button class="module-tab">广告运营</button><button class="module-tab">系统设置</button>
+              </div>
+            </div>
+            <div class="divider-soft"></div>
+            <p class="preview-label">二级菜单</p>
+            <div class="preview-box white">
+              <button class="nav-item active"><i data-lucide="layout-dashboard" class="icon"></i><span>经营概览</span></button>
+              <button class="nav-item" style="padding-left:38px"><span>广告位管理</span></button>
+              <button class="nav-item" style="padding-left:38px"><span>媒体与公司</span><small>3</small></button>
+              <button class="nav-item"><i data-lucide="settings-2" class="icon"></i><span>平台配置</span></button>
+            </div>
+          </div>
+          <div class="spec-panel">
+            <p class="preview-label">状态与尺寸</p>
+            <div class="nav-spec-list">
+              <div><span>一级项高度</span><strong>43px</strong></div>
+              <div><span>二级项高度</span><strong>35px</strong></div>
+              <div><span>图标尺寸</span><strong>17px</strong></div>
+              <div><span>默认色</span><strong>--text-body</strong></div>
+              <div><span>选中态</span><strong>品牌浅底 + 品牌字色</strong></div>
+              <div><span>收起方式</span><strong>图标 + 悬浮提示 + aria-label</strong></div>
+            </div>
+            <div class="divider-soft"></div>
+            <div class="preview-label">收起状态</div>
+            <div class="collapsed-demo">
+              <button title="经营概览"><i data-lucide="layout-dashboard" class="icon"></i></button>
+              <button title="广告资源"><i data-lucide="panels-top-left" class="icon"></i></button>
+              <button title="系统设置"><i data-lucide="settings-2" class="icon"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="actions">
+        <div class="section-head"><div><h2>操作组件</h2><p>主操作、次操作、图标操作与危险操作</p></div><span class="section-index">05</span></div>
+        <div class="spec-panel">
+          <p class="preview-label">按钮层级</p>
+          <div class="component-row">
+            <button class="button-primary"><i data-lucide="plus" class="icon"></i>新增用户</button>
+            <button class="button-secondary"><i data-lucide="refresh-cw" class="icon"></i>刷新</button>
+            <button class="button-ghost"><i data-lucide="arrow-up-right" class="icon"></i>查看详情</button>
+            <button class="button-danger"><i data-lucide="trash-2" class="icon"></i>删除</button>
+            <button class="icon-demo" title="更多操作"><i data-lucide="ellipsis" class="icon"></i></button>
+          </div>
+          <div class="divider-soft"></div>
+          <p class="preview-label">交互状态</p>
+          <div class="component-row">
+            <button class="button-primary">默认</button>
+            <button class="button-primary pressed">按压</button>
+            <button class="button-secondary">默认</button>
+            <button class="button-secondary pressed">按压</button>
+            <button class="button-primary" disabled>禁用</button>
+            <button class="button-secondary" disabled>禁用</button>
+          </div>
+          <div class="component-spec-grid">
+            <div><span>高度</span><strong>38px；主操作可 40px</strong></div>
+            <div><span>圆角</span><strong>11px；主操作 12px</strong></div>
+            <div><span>间距</span><strong>图标与文字 7px</strong></div>
+            <div><span>反馈</span><strong>Hover 换底，按压下移 1px</strong></div>
+            <div><span>焦点</span><strong>3px 品牌半透明光环</strong></div>
+            <div><span>禁用</span><strong>透明度 45%，禁止指针</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="forms">
+        <div class="section-head"><div><h2>表单组件</h2><p>输入、选择、分段控制、开关与辅助说明</p></div><span class="section-index">06</span></div>
+        <div class="spec-panel">
+          <div class="spec-grid cols-2">
+            <div class="field"><label>用户名称</label><div class="input-shell"><i data-lucide="user-round" class="icon"></i><input placeholder="请输入姓名或用户名"></div><span class="field-hint">支持姓名和用户名模糊搜索。</span></div>
+            <div class="field"><label>所属部门</label><div class="input-shell"><i data-lucide="building-2" class="icon"></i><select><option>请选择部门</option><option>运营中心</option><option>研发中心</option></select></div><span class="field-hint">必填。</span></div>
+            <div class="field"><label>备注</label><div class="input-shell textarea-shell"><textarea class="textarea" placeholder="补充说明"></textarea></div><span class="field-hint">最多 200 个字符。</span></div>
+            <div>
+              <div class="field"><label>用户状态</label><div class="segmented"><button class="segment active">全部</button><button class="segment">已启用</button><button class="segment">已禁用</button></div></div>
+              <div class="field" style="margin-top:18px"><label>自动同步</label><div class="component-row" style="margin-top:0"><button class="switch on" aria-label="自动同步已开启"></button><span class="field-hint">开启后配置变更会实时推送到引擎。</span></div></div>
+            </div>
+          </div>
+          <div class="component-spec-grid" style="margin-top:18px">
+            <div><span>控件高度</span><strong>38px</strong></div>
+            <div><span>输入圆角</span><strong>11px</strong></div>
+            <div><span>默认背景</span><strong>--surface-muted</strong></div>
+            <div><span>聚焦边框</span><strong>品牌色 1px + 光环</strong></div>
+            <div><span>标签字号</span><strong>10px / 600</strong></div>
+            <div><span>校验反馈</span><strong>字段下方显示，避免仅靠颜色</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="data">
+        <div class="section-head"><div><h2>数据展示</h2><p>指标卡、面板、表格、状态和进度</p></div><span class="section-index">07</span></div>
+        <div class="spec-panel">
+          <div class="spec-grid cols-3">
+            <article class="kpi-demo"><div class="kpi-demo-top">预估收益 <span class="kpi-demo-icon"><i data-lucide="circle-dollar-sign" class="icon"></i></span></div><div class="kpi-demo-value">¥ 486,320</div><div class="kpi-demo-foot"><b>+6.8%</b> 较昨日</div></article>
+            <article class="kpi-demo"><div class="kpi-demo-top">原始请求 <span class="kpi-demo-icon"><i data-lucide="activity" class="icon"></i></span></div><div class="kpi-demo-value">28.64M</div><div class="kpi-demo-foot"><b>+4.2%</b> 较昨日</div></article>
+            <article class="kpi-demo"><div class="kpi-demo-top">有效填充率 <span class="kpi-demo-icon"><i data-lucide="pie-chart" class="icon"></i></span></div><div class="kpi-demo-value">83.7%</div><div class="kpi-demo-foot">低于目标 85%</div></article>
+          </div>
+          <div class="divider-soft"></div>
+          <div class="panel-demo">
+            <div class="panel-demo-head"><div><strong>用户与权限</strong><small>3 名可见用户</small></div><button class="button-primary"><i data-lucide="plus" class="icon"></i>新增用户</button></div>
+            <table class="table-demo">
+              <thead><tr><th>用户</th><th>角色</th><th>所属部门</th><th>状态</th><th>创建时间</th></tr></thead>
+              <tbody>
+                <tr><td><div class="person"><span class="person-avatar">AD</span><span><strong>系统管理员</strong><small>@admin</small></span></div></td><td><span class="status-demo warning">超级管理员</span></td><td>总公司</td><td><span class="status-demo success"><i class="dot-status"></i>已启用</span></td><td>2026-09-21 12:47:48</td></tr>
+                <tr><td><div class="person"><span class="person-avatar" style="background:#6b9bff">ZH</span><span><strong>张三</strong><small>@zhangsan</small></span></div></td><td><span class="status-demo info">普通用户</span></td><td>后端组</td><td><span class="status-demo success"><i class="dot-status"></i>已启用</span></td><td>2026-09-21 12:47:48</td></tr>
+                <tr><td><div class="person"><span class="person-avatar" style="background:#8269d8">LI</span><span><strong>李四</strong><small>@lisi</small></span></div></td><td><span class="status-demo info">普通用户</span></td><td>市场部</td><td><span class="status-demo success"><i class="dot-status"></i>已启用</span></td><td>2026-09-21 12:47:49</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="spec-grid cols-3" style="margin-top:14px">
+            <div><p class="preview-label">状态标签</p><div class="component-row"><span class="status-demo success"><i class="dot-status"></i>正常</span><span class="status-demo warning"><i class="dot-status"></i>观察</span><span class="status-demo danger"><i class="dot-status"></i>异常</span><span class="status-demo info">草稿</span></div></div>
+            <div><p class="preview-label">进度 72%</p><div class="progress-demo"><i style="width:72%"></i></div></div>
+            <div><p class="preview-label">表格规则</p><div class="field-hint">行高 44px，表头 32px；无竖线，仅保留浅分隔。</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="feedback">
+        <div class="section-head"><div><h2>反馈状态</h2><p>轻提示、告警、空状态和加载状态</p></div><span class="section-index">08</span></div>
+        <div class="spec-grid cols-2">
+          <div class="spec-panel">
+            <p class="preview-label">轻提示 Toast</p>
+            <div class="preview-box"><span class="toast-demo"><i data-lucide="check-circle-2" class="icon"></i>配置已保存</span></div>
+            <div class="divider-soft"></div>
+            <p class="preview-label">内联告警</p>
+            <div class="alert-demo"><i data-lucide="triangle-alert" class="icon"></i><div><strong>策略版本尚未完全同步</strong><p>engine-07 当前落后 12 秒，系统正在自动重试。</p></div></div>
+          </div>
+          <div class="spec-panel">
+            <p class="preview-label">空状态</p>
+            <div class="empty-demo"><div><span class="empty-icon"><i data-lucide="inbox" class="icon"></i></span><strong>暂无匹配结果</strong><p>调整筛选条件，或创建第一条广告位记录。</p></div></div>
+            <div class="divider-soft"></div>
+            <p class="preview-label">加载状态</p>
+            <div class="preview-box white"><div class="skeleton title"></div><div class="skeleton line"></div><div class="skeleton line short"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="spec-section" id="rules">
+        <div class="section-head"><div><h2>使用规则</h2><p>动效、可访问性与新页面验收标准</p></div><span class="section-index">09</span></div>
+        <div class="spec-panel">
+          <div class="spec-grid cols-3">
+            <article class="principle"><span class="principle-icon"><i data-lucide="timer" class="icon"></i></span><strong>动效时长</strong><p>Hover 160ms，常规状态 220ms，骨架布局 280ms；缓动使用 cubic-bezier(.2,.8,.2,1)。</p></article>
+            <article class="principle"><span class="principle-icon"><i data-lucide="focus" class="icon"></i></span><strong>焦点可见</strong><p>键盘焦点使用品牌色 1px 边框和 3px 半透明光环，不允许直接移除 outline。</p></article>
+            <article class="principle"><span class="principle-icon"><i data-lucide="contrast" class="icon"></i></span><strong>文字对比</strong><p>正文与背景至少 4.5:1；图标和大字号至少 3:1，状态不能只依赖颜色。</p></article>
+          </div>
+          <div class="do-dont" style="margin-top:14px">
+            <article class="rule-card do"><h3><i data-lucide="check" class="icon"></i>新页面完成条件</h3><ul><li>复用本规范中的令牌、骨架和交互状态。</li><li>至少检查浅色、深色和跟随系统三种主题。</li><li>在 1440×1024 和 1233×751 下无横向溢出。</li><li>表格、筛选、空状态和错误状态均有定义。</li></ul></article>
+            <article class="rule-card dont"><h3><i data-lucide="x" class="icon"></i>禁止事项</h3><ul><li>新增未经定义的品牌色或圆角数值。</li><li>用重边框区分内容区，或用卡片嵌套卡片。</li><li>只做默认态，不实现按压、焦点、禁用和加载态。</li><li>用纯色或图标表达异常，不提供文字说明。</li></ul></article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast-demo" id="specToast" style="position:fixed;right:28px;bottom:28px;opacity:0;transform:translateY(10px);transition:.2s ease;pointer-events:none;z-index:80"><i data-lucide="check-circle-2" class="icon"></i><span>操作已触发</span></div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const root = document.documentElement;
+      const systemTheme = matchMedia('(prefers-color-scheme: dark)');
+      const themeButtons = [...document.querySelectorAll('[data-theme-option]')];
+      const specShell = document.getElementById('specShell');
+      const sidebarToggle = document.getElementById('specSidebarToggle');
+      const toast = document.getElementById('specToast');
+      const names = { light: '浅色', dark: '深色', system: '跟随系统' };
+      let preference = root.dataset.themePreference || 'system';
+
+      const showToast = (message) => {
+        toast.querySelector('span').textContent = message;
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+        clearTimeout(window.specToastTimer);
+        window.specToastTimer = setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(10px)';
+        }, 1700);
+      };
+      const applyTheme = (next, persist = false) => {
+        preference = names[next] ? next : 'system';
+        root.dataset.themePreference = preference;
+        root.dataset.theme = preference === 'system' ? (systemTheme.matches ? 'dark' : 'light') : preference;
+        themeButtons.forEach((button) => button.classList.toggle('active', button.dataset.themeOption === preference));
+        if (persist) {
+          try { localStorage.setItem('adx-theme-preference', preference); } catch (error) {}
+        }
+      };
+      applyTheme(preference);
+      systemTheme.addEventListener('change', () => { if (preference === 'system') applyTheme('system'); });
+      themeButtons.forEach((button) => button.addEventListener('click', () => {
+        applyTheme(button.dataset.themeOption, true);
+        showToast('主题预览：' + names[button.dataset.themeOption]);
+      }));
+
+      if (window.lucide) lucide.createIcons();
+
+      sidebarToggle.addEventListener('click', () => {
+        const collapsed = !specShell.classList.contains('sidebar-collapsed');
+        specShell.classList.toggle('sidebar-collapsed', collapsed);
+        sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
+        sidebarToggle.setAttribute('aria-label', collapsed ? '展开组件导航' : '收起组件导航');
+      });
+
+      const navItems = [...document.querySelectorAll('.sidebar .nav-item[data-target]')];
+      const activate = (id) => navItems.forEach((item) => item.classList.toggle('active', item.dataset.target === id));
+      navItems.forEach((item) => item.addEventListener('click', () => {
+        document.getElementById(item.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        activate(item.dataset.target);
+      }));
+      document.querySelectorAll('[data-jump]').forEach((button) => button.addEventListener('click', () => {
+        document.querySelectorAll('[data-jump]').forEach((item) => item.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById(button.dataset.jump)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }));
+
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) activate(visible.target.id);
+      }, { root: document.getElementById('specWorkspace'), threshold: [0.25, 0.55], rootMargin: '-10% 0px -65% 0px' });
+      document.querySelectorAll('.spec-section').forEach((section) => observer.observe(section));
+
+      document.querySelectorAll('.switch').forEach((control) => control.addEventListener('click', () => {
+        control.classList.toggle('on');
+        control.setAttribute('aria-label', control.classList.contains('on') ? '自动同步已开启' : '自动同步已关闭');
+      }));
+      document.querySelectorAll('.segmented').forEach((group) => group.querySelectorAll('.segment').forEach((button) => button.addEventListener('click', () => {
+        group.querySelectorAll('.segment').forEach((item) => item.classList.remove('active'));
+        button.classList.add('active');
+      })));
+      document.querySelectorAll('.button-primary:not(:disabled),.button-secondary:not(:disabled),.button-ghost,.button-danger,.icon-demo,.account-preview-item').forEach((button) => button.addEventListener('click', () => showToast('示例操作已触发')));
+    });
+  </script>
+</body>
+</html>
