@@ -58,7 +58,7 @@ function submit() {
             <label v-for="field in config.fields" :key="field.key" class="adx-field" :class="{ full: field.type === 'textarea' }">
               <span class="adx-field__label">{{ field.label }}<template v-if="field.required"> *</template></span>
               <span v-if="field.type === 'textarea'" class="adx-input-shell resource-form__textarea"><textarea v-model="form[field.key] as string" :placeholder="field.placeholder" /></span>
-              <span v-else-if="field.type === 'select'" class="adx-input-shell"><select v-model="form[field.key]" :disabled="field.disabled"><option v-for="option in field.options" :key="String(option.value)" :value="option.value">{{ option.label }}</option></select></span>
+              <span v-else-if="field.type === 'select'" class="adx-input-shell adx-select-shell"><select v-model="form[field.key]" :disabled="field.disabled"><option v-for="option in field.options" :key="String(option.value)" :value="option.value">{{ option.label }}</option></select></span>
               <span v-else-if="field.type === 'switch'" class="resource-form__switch"><button class="switch" :class="{ on: Boolean(form[field.key]) }" type="button" role="switch" :aria-checked="Boolean(form[field.key])" @click="form[field.key] = !form[field.key]" /><small>{{ Boolean(form[field.key]) ? '已启用' : '已停用' }}</small></span>
               <span v-else class="adx-input-shell"><input v-model="form[field.key]" :type="field.type === 'number' ? 'number' : 'text'" :placeholder="field.placeholder" :disabled="field.disabled" /></span>
               <small v-if="errors[field.key]" class="resource-form__error">{{ errors[field.key] }}</small><small v-else-if="field.hint" class="adx-field__hint">{{ field.hint }}</small>

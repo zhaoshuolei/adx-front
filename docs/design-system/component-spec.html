@@ -254,11 +254,11 @@
       </section>
 
       <section class="spec-section" id="forms">
-        <div class="section-head"><div><h2>表单组件</h2><p>输入、选择、分段控制、开关与辅助说明</p></div><span class="section-index">06</span></div>
+        <div class="section-head"><div><h2>表单组件</h2><p>输入、原生选择、分段控制、开关与辅助说明</p></div><span class="section-index">06</span></div>
         <div class="spec-panel">
           <div class="spec-grid cols-2">
             <div class="field"><label>用户名称</label><div class="input-shell"><i data-lucide="user-round" class="icon"></i><input placeholder="请输入姓名或用户名"></div><span class="field-hint">支持姓名和用户名模糊搜索。</span></div>
-            <div class="field"><label>所属部门</label><div class="input-shell"><i data-lucide="building-2" class="icon"></i><select><option>请选择部门</option><option>运营中心</option><option>研发中心</option></select></div><span class="field-hint">必填。</span></div>
+            <div class="field"><label>所属部门</label><div class="input-shell select-shell"><select><option>请选择部门</option><option>运营中心</option><option>研发中心</option></select></div><span class="field-hint">必填；使用浏览器原生选择器和弹层。</span></div>
             <div class="field"><label>备注</label><div class="input-shell textarea-shell"><textarea class="textarea" placeholder="补充说明"></textarea></div><span class="field-hint">最多 200 个字符。</span></div>
             <div>
               <div class="field"><label>用户状态</label><div class="segmented"><button class="segment active">全部</button><button class="segment">已启用</button><button class="segment">已禁用</button></div></div>
@@ -268,7 +268,7 @@
           <div class="component-spec-grid" style="margin-top:18px">
             <div><span>控件高度</span><strong>38px</strong></div>
             <div><span>输入圆角</span><strong>11px</strong></div>
-            <div><span>默认背景</span><strong>--surface-muted</strong></div>
+            <div><span>下拉实现</span><strong>原生 select，不做自绘弹层</strong></div>
             <div><span>聚焦边框</span><strong>品牌色 1px + 光环</strong></div>
             <div><span>标签字号</span><strong>10px / 600</strong></div>
             <div><span>校验反馈</span><strong>字段下方显示，避免仅靠颜色</strong></div>

@@ -213,7 +213,7 @@ onBeforeUnmount(() => window.clearInterval(refreshTimer))
       </article>
     </section>
 
-    <footer class="runtime-footer"><span><i :class="{ warning: !clusterHealthy }" />{{ autoRefresh ? `每 ${refreshSeconds} 秒自动刷新` : '自动刷新已暂停' }}</span><label><input v-model="autoRefresh" type="checkbox" />自动刷新</label><select v-model.number="refreshSeconds" :disabled="!autoRefresh"><option :value="15">15 秒</option><option :value="30">30 秒</option><option :value="60">60 秒</option></select><span v-if="refreshing">正在更新运行时数据…</span></footer>
+    <footer class="runtime-footer"><span><i :class="{ warning: !clusterHealthy }" />{{ autoRefresh ? `每 ${refreshSeconds} 秒自动刷新` : '自动刷新已暂停' }}</span><label><input v-model="autoRefresh" type="checkbox" />自动刷新</label><select v-model.number="refreshSeconds" class="adx-select" :disabled="!autoRefresh"><option :value="15">15 秒</option><option :value="30">30 秒</option><option :value="60">60 秒</option></select><span v-if="refreshing">正在更新运行时数据…</span></footer>
   </div>
 </template>
 

@@ -45,6 +45,14 @@ The active theme is stored on `document.documentElement`:
 
 The shell JavaScript must listen to `matchMedia('(prefers-color-scheme: dark)')` and reapply the system theme while the preference is `system`.
 
+## Form controls
+
+- Use a native `<select>` for single-select filters and forms with roughly 1–15 options.
+- Keep the browser and operating-system popup, arrow, keyboard navigation, first-letter jump, and touch behavior.
+- Wrap a native select with `adx-input-shell adx-select-shell` only to align it with adjacent inputs. Do not add a custom chevron.
+- Use a custom listbox only when the feature requires multi-select, search, grouping, virtual scrolling, or rich option content.
+- Pagination and other compact native selects should use `adx-select`; see `components.css` for the shared sizing.
+
 ## Accessibility contract
 
 - Every icon-only control requires `aria-label` and a tooltip title where the icon is not universally understood.
