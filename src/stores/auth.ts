@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import type { LoginRequest, UserInfo } from '@/types/api'
-import { getCurrentUser, login as loginRequest, mockMode, refreshToken } from '@/services/auth'
+import type { LenovoIdCallbackRequest, LoginRequest, UserInfo } from '@/types/api'
+import { exchangeLenovoToken, getCurrentUser, login as loginRequest, mockMode, refreshToken } from '@/services/auth'
 
 const TOKEN_KEY = 'adx-access-token'
 const EXPIRY_KEY = 'adx-access-token-expiry'
@@ -41,6 +41,22 @@ export const useAuthStore = defineStore('auth', {
         const token = await loginRequest(payload)
         const user = await getCurrentUser(token.accessToken)
         this.persistSession(token.accessToken, token.expiresIn, user)
+      } finally {
+        this.loading = false
+      }
+    },
+    async loginWithLenovo(payload: LenovoIdCallbackRequest) {
+      this.loading = true
+      try {
+        const result = await exchangeLenovoToken(payload)
+        const user: UserInfo = {
+          userId: 0,
+          username: result.userInfo.username,
+          displayName: result.userInfo.displayName,
+          roles: result.userInfo.roles.map((name) => ({ name })),
+        }
+        this.persistSession(result.token, result.expiresIn, user)
+        return result
       } finally {
         this.loading = false
       }

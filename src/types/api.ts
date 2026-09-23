@@ -43,6 +43,27 @@ export interface UserInfo {
   roles: UserRole[]
 }
 
+export interface LenovoIdCallbackRequest {
+  tokenType: string
+  accessToken: string
+  username?: string
+  displayName?: string
+}
+
+export interface LenovoIdUserInfo {
+  username: string
+  displayName: string
+  email?: string
+  roles: string[]
+}
+
+export interface LenovoIdLoginResponse {
+  token: string
+  tokenType: string
+  expiresIn: number
+  userInfo: LenovoIdUserInfo
+}
+
 export interface ReportSummary {
   origRequests: number
   origAds: number

@@ -10,6 +10,12 @@ const routes: RouteRecordRaw[] = [
     meta: { public: true, title: '登录' },
   },
   {
+    path: '/auth/lenovoid/callback',
+    name: 'lenovoid-callback',
+    component: () => import('@/views/LenovoCallbackView.vue'),
+    meta: { public: true, title: '联想一键登录' },
+  },
+  {
     path: '/',
     component: AdminLayout,
     redirect: '/overview',

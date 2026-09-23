@@ -8,7 +8,7 @@ ADX 管理系统前端，面向运营、财务、运维和平台管理员，覆�
 
 - 全屏一体化管理框架，包含一级模块导航、二级菜单和可折叠侧栏。
 - 支持浅色、深色和跟随系统三种主题，并持久化用户偏好。
-- JWT 登录、会话刷新、路由守卫和统一 API 响应处理。
+- JWT 登录、联想 LenovoId 一键登录、会话刷新、路由守卫和统一 API 响应处理。
 - 投放总览、实时运行状态和经营指标可视化。
 - 基于 Swagger 的页面范围、接口映射、角色与状态清单。
 - 可复用的设计令牌、组件样式、HTML 片段和页面验收规范。
@@ -83,6 +83,22 @@ VITE_API_BASE_URL=/api
 | `VITE_USE_MOCK` | `true` 时使用本地演示数据，`false` 时调用真实接口 |
 | `VITE_API_BASE_URL` | 前端 API 基础路径，默认 `/api` |
 | `VITE_API_PROXY_TARGET` | Vite 开发代理的后端目标地址 |
+| `VITE_LENOVO_AUTH_URL` | 联想一键登录授权地址；支持 `{redirect_uri}`、`{state}`、`{client_id}`、`{scope}`、`{response_type}` 占位符 |
+| `VITE_LENOVO_CLIENT_ID` | 联想授权 client_id |
+| `VITE_LENOVO_SCOPE` | 联想授权 scope，默认 `openid profile` |
+| `VITE_LENOVO_RESPONSE_TYPE` | 联想授权响应类型，默认 `token` |
+
+完整变量示例见 `.env.example`。联想授权地址和 client_id 必须按部署环境配置，
+不得硬编码在业务代码中。
+
+### LenovoId 一键登录流程
+
+1. 登录页跳转到 `VITE_LENOVO_AUTH_URL`，并携带回调地址与随机 `state`。
+2. 联想授权完成后回调 `/auth/lenovoid/callback`。
+3. 前端从查询参数或 hash 中读取 `accessToken` / `access_token` 与 `tokenType`。
+4. 前端调用 `POST /api/auth/lenovoid/callback`，验证联想 token 并换取 ADX JWT。
+5. 如果提示没有 ADX 权限，回调页提供“申请 ADX 权限”，调用
+   `POST /api/auth/lenovoid/apply`，不会自动替用户提交。
 
 真实接口与字段定义以 Swagger 为准：
 

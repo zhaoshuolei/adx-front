@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowRight, BarChart3, Image, LockKeyhole, Radio, RefreshCw, ShieldCheck, SunMoon, UserRound } from 'lucide-vue-next'
-import { getCaptcha, mockMode } from '@/services/auth'
+import { ArrowRight, BadgeCheck, BarChart3, Image, LockKeyhole, Radio, RefreshCw, ShieldCheck, SunMoon, UserRound } from 'lucide-vue-next'
+import { beginLenovoLogin, getCaptcha, isLenovoLoginConfigured, mockMode } from '@/services/auth'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 
@@ -13,6 +13,7 @@ const theme = useThemeStore()
 const captchaImage = ref('')
 const errorMessage = ref('')
 const captchaLoading = ref(false)
+const lenovoConfigured = isLenovoLoginConfigured()
 
 const form = reactive({
   username: mockMode ? 'admin' : '',
@@ -64,6 +65,16 @@ function toggleTheme() {
   theme.setPreference(nextThemeDark.value ? 'dark' : 'light')
 }
 
+function oneClickLogin() {
+  errorMessage.value = ''
+  try {
+    const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/overview'
+    beginLenovoLogin(redirect)
+  } catch (error) {
+    errorMessage.value = error instanceof Error ? error.message : '无法发起联想一键登录'
+  }
+}
+
 onMounted(refreshCaptcha)
 </script>
 
@@ -88,13 +99,16 @@ onMounted(refreshCaptcha)
 
     <section class="login-form-wrap">
       <div class="login-card">
-        <div class="login-card__head"><span class="login-card__kicker">安全登录</span><h2>欢迎回来</h2><p>使用管理账号登录 ADX 管理中心。</p></div>
+        <div class="login-card__head"><span class="login-card__kicker">安全登录</span><h2>欢迎回来</h2><p>使用联想账号一键登录，或使用管理账号登录。</p></div>
+        <button class="login-lenovo" type="button" @click="oneClickLogin"><BadgeCheck class="adx-icon" /><span><strong>联想一键登录</strong><small>使用 Lenovo ID 安全登录 ADX</small></span><ArrowRight class="adx-icon" /></button>
+        <div class="login-divider"><span>或使用账号密码登录</span></div>
         <form class="login-form" @submit.prevent="submit">
           <label class="adx-field"><span class="adx-field__label">用户名</span><span class="adx-input-shell login-input"><UserRound class="adx-icon" /><input v-model.trim="form.username" name="username" autocomplete="username" placeholder="请输入用户名" /></span></label>
           <label class="adx-field"><span class="adx-field__label">密码</span><span class="adx-input-shell login-input"><LockKeyhole class="adx-icon" /><input v-model="form.password" name="password" type="password" autocomplete="current-password" placeholder="请输入密码" /></span></label>
           <label class="adx-field"><span class="adx-field__label">图形验证码</span><span class="login-captcha-row"><span class="adx-input-shell login-input"><Image class="adx-icon" /><input v-model.trim="form.captchaCode" name="captchaCode" autocomplete="off" maxlength="6" placeholder="请输入验证码" /></span><button class="login-captcha" type="button" :aria-label="'刷新验证码'" :disabled="captchaLoading" @click="refreshCaptcha"><img v-if="captchaImage" :src="captchaImage" alt="图形验证码" /><RefreshCw v-else class="adx-icon" /></button></span></label>
           <div class="login-options"><label><input v-model="form.remember" type="checkbox" />记住用户名</label><span v-if="mockMode" class="login-demo">演示环境 · admin / admin123 / 1234</span></div>
           <p v-if="errorMessage" class="login-error" role="alert">{{ errorMessage }}</p>
+          <p v-if="!lenovoConfigured && !mockMode" class="login-config-hint">联想一键登录需要配置授权地址后才能使用。</p>
           <button class="login-submit" type="submit" :disabled="auth.loading">{{ auth.loading ? '正在登录…' : '登录' }}<ArrowRight class="adx-icon" /></button>
         </form>
         <p class="login-footnote">登录即表示你已阅读并同意平台安全规范。访问令牌有效期 15 分钟，过期后将自动刷新。</p>
@@ -131,6 +145,17 @@ onMounted(refreshCaptcha)
 .login-card h2 { margin: 9px 0 0; font-size: 28px; letter-spacing: -.6px; }
 .login-card__head p { margin: 8px 0 0; color: var(--adx-text-muted); font-size: 11px; }
 .login-form { display: grid; gap: 16px; margin-top: 28px; }
+.login-lenovo { display: grid; grid-template-columns: 24px minmax(0, 1fr) 18px; align-items: center; gap: 10px; width: 100%; min-height: 58px; margin-top: 24px; padding: 10px 13px; border: 1px solid #c9eee0; border-radius: 13px; color: var(--adx-success); background: var(--adx-brand-soft); text-align: left; }
+.login-lenovo:hover { border-color: var(--adx-brand-500); background: #dcf5eb; }
+.login-lenovo > .adx-icon { width: 19px; height: 19px; }
+.login-lenovo > .adx-icon:last-child { width: 15px; height: 15px; }
+.login-lenovo strong { display: block; color: var(--adx-text-strong); font-size: 11px; }
+.login-lenovo small { display: block; margin-top: 3px; color: var(--adx-text-muted); font-size: 8px; }
+.login-divider { display: flex; align-items: center; gap: 10px; margin-top: 18px; color: var(--adx-text-muted); font-size: 8px; }
+.login-divider::before,
+.login-divider::after { flex: 1; height: 1px; background: var(--adx-divider); content: ""; }
+.login-form { margin-top: 18px; }
+.login-config-hint { margin: -5px 0 0; color: var(--adx-warning); font-size: 8px; text-align: center; }
 .login-input { height: 44px; }
 .login-input input { font-size: 11px; }
 .login-captcha-row { display: grid; grid-template-columns: minmax(0, 1fr) 122px; gap: 10px; }
